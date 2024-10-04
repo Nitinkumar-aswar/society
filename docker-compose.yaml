@@ -1,9 +1,18 @@
-version: "0.1.0"
+version: '3.8'
+
 services:
-  Socity_managment:
-    container_name: Society_Management
+  frontend:
     build:
       context: .
+      dockerfile: frontend/Dockerfile
     ports:
-      - 8080:8080
-    restart: always
+      - "80:80"  # Expose the frontend on port 80
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8081:8081"  # Expose the backend on port 5000
