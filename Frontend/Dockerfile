@@ -9,7 +9,7 @@ USER root
 
 # Update package lists and install any necessary packages
 RUN apt-get update && \
-   # apt-get install -y <necessary-packages> && \  # Replace with actual packages if needed
+    apt-get install -y <necessary-packages> && \  # Replace with actual packages if needed
     apt-get install -y python3 && \  # Ensure Python 3 is installed
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
