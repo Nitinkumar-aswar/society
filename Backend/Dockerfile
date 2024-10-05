@@ -1,6 +1,6 @@
 FROM node:14-alpine as build
 
-WORKDIR /app
+WORKDIR /society/Backend/
 COPY package.json ./
 RUN npm install
 COPY . ./
@@ -8,6 +8,6 @@ RUN npm run build
 
 # Serve the app using nginx
 FROM nginx:alpine
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=Frontend/myapp/public/index.html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
