@@ -8,8 +8,8 @@ WORKDIR /app
 USER root
 
 # Update package lists and install any necessary packages
-RUN sudo -s apt-get install -y python3 && \  # Ensure Python 3 is installed
-    sudo -s apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get install -y python3 && \  # Ensure Python 3 is installed
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file
 COPY requirements.txt .
