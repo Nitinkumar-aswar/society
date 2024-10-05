@@ -1,39 +1,58 @@
 pipeline {
     agent any
-    
+
     environment {
-        // Define environment variables if needed
         REACT_APP_DIR = 'frontend'
         PYTHON_APP_DIR = 'backend'
         AWS_REGION = 'us-west-1'
     }
-    
+
     stages {
         stage('Checkout Code') {
             steps {
-                // Checkout the code from your repository
-                git 'https://github.com/Nitinkumar-aswar/society.git'
+                git branch: 'main', url: 'https://github.com/Nitinkumar-aswar/society.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Check Python & Pip') {
             steps {
-                // Install dependencies for React
-                dir(society/Frontend/myapp/src/App.js) {
-                    sh 'npm install'
+                // Check if Python3 and pip3 are installed
+                sh '''
+                if ! command -v python3 &> /dev/null; then
+                    echo "Python3 not installed"
+                    exit 1
+                fi
+                if ! command -v pip3 &> /dev/null; then
+                    echo "pip3 not installed"
+                    exit 1
+                fi
+                '''
+            }
+        }
+
+        stage('Setup Python Virtual Env') {
+            steps {
+                dir('society/Backend') {
+                    sh '''
+                    python3 -m venv venv
+                    source venv/bin/activate
+                    pip install -r requirements.txt
+                    '''
                 }
-                
-                // Install dependencies for Python (if using a virtual environment)
-                dir(society/Backend/app.py) {
-                    sh 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Install Frontend Dependencies') {
+            steps {
+                dir('society/Frontend/myapp') {
+                    sh 'npm install'
                 }
             }
         }
 
         stage('Build') {
             steps {
-                // Build React App
-                dir(society/Frontend/myapp/src/App.js) {
+                dir('society/Frontend/myapp') {
                     sh 'npm run build'
                 }
             }
@@ -41,13 +60,22 @@ pipeline {
 
         stage('Test') {
             steps {
-                // Run tests for React and Python
-                dir(society/Frontend/myapp/src/App.js) {
+                dir('society/Frontend/myapp') {
                     sh 'npm run test'
                 }
-                dir(society/Backend/app.py) {
-                    sh 'pytest'  // Assuming you're using pytest for Python testing
+
+                dir('society/Backend') {
+                    sh '''
+                    source venv/bin/activate
+                    pytest
+                    '''
                 }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploy step - Define your deployment steps here, e.g., AWS S3, EC2, or ECS deployment.'
             }
         }
     }
