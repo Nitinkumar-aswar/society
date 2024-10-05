@@ -1,23 +1,13 @@
-# Backend Dockerfile
+FROM node:14-alpine as build
 
-# Use a Python base image
-FROM python:3.9
-
-# Set the working directory
 WORKDIR /app
+COPY package.json ./
+RUN npm install
+COPY . ./
+RUN npm run build
 
-# Copy requirements.txt first to leverage caching
-COPY backend/requirements.txt ./
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of the application code
-COPY backend/ .
-
-# Expose the port your app runs on
-EXPOSE 5000
-
-# Command to run the application
-CMD ["python", "app.py"]
-
+# Serve the app using nginx
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
