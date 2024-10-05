@@ -1,27 +1,20 @@
-# Use the official Python image
+# Dockerfile
 FROM python:3.9-slim
 
-# Set the working directory
-WORKDIR /Frontend/myapp
+# Set working directory
+WORKDIR /app
 
-# Switch to the root user to install packages
-USER root
+# Install nodejs and npm for the React app
+RUN apt-get update && \
+    apt-get install -y nodejs npm && \
+    rm -rf /var/lib/apt/lists/*
 
-# Update package lists and install any necessary packages
-RUN apt-get install -y python3 && \  # Ensure Python 3 is installed
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Copy the requirements file
+# Copy requirements
 COPY requirements.txt .
-
-# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
+# Copy the rest of the app
 COPY . .
 
-# Expose the application port
 EXPOSE 5000
-
-# Command to run the application
-CMD ["python", "app.py"]  # Adjust "app.py" to your main application file
+CMD ["python", "app.py"]
