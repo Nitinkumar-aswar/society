@@ -1,25 +1,29 @@
+# Use the official Python image
 FROM python:3.9-slim
 
-# Switch to root user to install packages
+# Set the working directory
+WORKDIR /app
+
+# Switch to the root user to install packages
 USER root
 
-# Update and install any necessary packages
-RUN sudo apt-get update && \
-   sudo apt-get install -y sudo python3 python3-pip && \
-   sudo apt-get clean && rm -rf /var/lib/apt/lists/*
+# Update package lists and install any necessary packages
+RUN apt-get update && \
+   # apt-get install -y <necessary-packages> && \  # Replace with actual packages if needed
+    apt-get install -y python3 && \  # Ensure Python 3 is installed
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory for your application
-WORKDIR /Frontend/myapp
+# Copy the requirements file
+COPY requirements.txt .
 
-# Copy requirements.txt and install Python dependencies
-COPY requirements.txt ./
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code
+# Copy the rest of the application code
 COPY . .
 
 # Expose the application port
 EXPOSE 5000
 
 # Command to run the application
-CMD ["python", "app.py"]
+CMD ["python", "app.py"]  # Adjust "app.py" to your main application file
