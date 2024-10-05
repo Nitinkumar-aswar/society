@@ -14,11 +14,19 @@ pipeline {
             }
         }
 
+        stage('Install Python & Pip') {
+            steps {
+                sh '''
+                apt-get update && apt-get install -y python3 python3-pip
+                '''
+            }
+        }
+
         stage('Check Python & Pip') {
             steps {
                 // Check if Python3 and pip3 are installed
                 sh '''
-                if ! command -v /usr/bin/python3 &> /dev/null; then
+                if ! command -v python3 &> /dev/null; then
                     echo "Python3 not installed"
                     exit 1
                 fi
@@ -30,34 +38,14 @@ pipeline {
             }
         }
 
-        stage('Install Pip') {
-            steps {
-                sh '''
-                if ! command -v pip3 &> /dev/null; then
-                    echo "pip3 not found, installing..."
-                    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-                    /usr/bin/python3 get-pip.py
-                fi
-                '''
-            }
-        }
-
-        stage('Install Frontend Dependencies') {
+        stage('Install Dependencies') {
             steps {
                 dir('society/Frontend/myapp') {
                     sh 'npm install'
                 }
-            }
-        }
 
-        stage('Setup Python Virtual Env') {
-            steps {
                 dir('society/Backend') {
-                    sh '''
-                    python3 -m venv venv
-                    source venv/bin/activate
-                    pip install -r requirements.txt
-                    '''
+                    sh 'pip3 install -r requirements.txt'
                 }
             }
         }
@@ -77,10 +65,7 @@ pipeline {
                 }
 
                 dir('society/Backend') {
-                    sh '''
-                    source venv/bin/activate
-                    pytest
-                    '''
+                    sh 'pytest'
                 }
             }
         }
