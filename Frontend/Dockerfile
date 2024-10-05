@@ -5,7 +5,7 @@ USER root
 
 # Update and install any necessary packages
 RUN sudo apt-get update && \
-   sudo apt-get install -y <necessary-packages> && \
+   sudo apt-get install -y sudo python3 python3-pip && \
    sudo apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory for your application
