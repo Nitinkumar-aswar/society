@@ -2,8 +2,7 @@
 FROM python:3.9-slim
 
 # Set working directory
-WORKDIR /app
-
+WORKDIR /Frontend/myapp
 # Install nodejs and npm for the React app
 RUN apt-get update && \
     apt-get install -y nodejs npm && \
