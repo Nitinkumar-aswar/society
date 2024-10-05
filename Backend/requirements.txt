@@ -1,1 +1,14 @@
-
+Flask==2.0.1               # For the web framework
+SQLAlchemy==1.4.22          # For database management
+Flask-SQLAlchemy==2.5.1     # SQLAlchemy integration with Flask
+Flask-Migrate==3.0.0        # For database migrations
+requests==2.26.0            # For making HTTP requests
+pytest==6.2.4               # For testing
+gunicorn==20.1.0            # For running the application in production
+psycopg2==2.9.1             # PostgreSQL adapter (if using PostgreSQL)
+PyMySQL==1.0.2              # MySQL adapter (if using MySQL)
+redis==3.5.3                # For Redis caching
+bcrypt==3.2.0               # For password hashing
+itsdangerous==2.0.1         # For handling cryptographic operations
+Jinja2==3.0.1               # For templating
+Werkzeug==2.0.1             # For WSGI utilities
